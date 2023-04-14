@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Regex_1", "Regex_1\Regex_1.csproj", "{4C4F5955-A870-4A98-A384-0553B4E58842}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "regex_2", "regex_2\regex_2.csproj", "{4816CE80-09DE-493F-915F-4502D550E966}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C4F5955-A870-4A98-A384-0553B4E58842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4F5955-A870-4A98-A384-0553B4E58842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4F5955-A870-4A98-A384-0553B4E58842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4F5955-A870-4A98-A384-0553B4E58842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4816CE80-09DE-493F-915F-4502D550E966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4816CE80-09DE-493F-915F-4502D550E966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4816CE80-09DE-493F-915F-4502D550E966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4816CE80-09DE-493F-915F-4502D550E966}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9CF82891-F7DB-438C-BF63-52AB16F1A9A4}
+	EndGlobalSection
+EndGlobal
