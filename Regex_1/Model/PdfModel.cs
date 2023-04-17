@@ -81,5 +81,9 @@ namespace Regex_1.Model
         [JsonProperty("Network")]
         public string? Network { get; set; }
         public string? PDFFile { get; set; }
+        [JsonProperty("Address")]
+        public string? Address { get; set; }
+        [JsonProperty("Policypremium")]
+        public string Policypremium { get; set; }
     }
 }

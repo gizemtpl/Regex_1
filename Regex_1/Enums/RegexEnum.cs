@@ -41,6 +41,8 @@ namespace Regex_1.Enums
         IsTecdit = 31,
         Country = 32,
         BirthDate = 33,
-        Network = 34
+        Network = 34,
+        Address=35,
+        Policypremium=36,
     }
 }
