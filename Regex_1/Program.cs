@@ -22,13 +22,43 @@ try
     string[] offerPatterns = { "(KASKO SİGORTA)(.*)" };
     string[] zeyilPatterns = { "" };
 
-    var read = PdfExtractText("pdf/andolukaskoteklif.pdf"); // pdfin konumu
+    var read = PdfExtractText("pdf/aveonekokasko.PDF"); // pdfin konumu
 
     var text = read[0].ToString();
     //isim ,soyisim ,adres, fiyat, police,tc (text bak  alt satıra point koy)
     //(?<=\d{10}/\d{1} \d{2}/\d{2}/\d{4} - )(.*)(?= \d{10} /\d{1}\d{8} \d{9})bitiş tarihi
     //PolicyEnforcement not başlangıç bitiş
     Dictionary<RegexEnum, string> cascoRegex = new Dictionary<RegexEnum, string>() {
+        {RegexEnum.NationalNumber,@"(?<=T.C. Kimlik No:)(.*)(?=)" },
+        {RegexEnum.PolicyNo,@"" },
+        //{RegexEnum.RenewNo,@"" },
+        {RegexEnum.StartDate,@"(?<=Başlama Tarihi: )(.*)(?= Bi)" },
+        {RegexEnum.EndDate, @"(?<= Bitiş Tarihi: )(.*)(?=)"},
+        {RegexEnum.Name,@"(?<=SİGORTA ETTİREN\n)(.*)(?=)" },
+        {RegexEnum.Firm,@"" },
+        {RegexEnum.Brand,@"(?<=Marka          :)(.*)(?= Tip)" },
+        {RegexEnum.Address, @""},
+        {RegexEnum.VehicleModel,@"(?<= Tip)(.*)(?=)" },
+        {RegexEnum.ModelYear,@"(?<=Model Yılı     :)(.*)(?=)" },
+        {RegexEnum.UsingType, @""},
+        {RegexEnum.VehicleType,@"" },
+        {RegexEnum.BrandCode,@" "},
+        {RegexEnum.FrameNumber,@"(?<= Şasi No     )(.*)(?=)" },
+        {RegexEnum.EngineNo,@"" },
+        {RegexEnum.NetPremium,@"(?<=Net Prim )(.*)(?= P)" },
+        {RegexEnum.GrossPremium,@"(?<=Brüt Prim )(.*)(?= 2)" },
+        {RegexEnum.RegisterNo,@"" },
+        {RegexEnum.PlateNumber," (?<=Plaka       :)(.*)(?=)" },
+        {RegexEnum.Branch,@"" },
+        {RegexEnum.VknNo,@"" },
+        {RegexEnum.IsPolicy,  @"" },
+        {RegexEnum.IsOffer, @"" },
+        {RegexEnum.QueryType, @"" },
+        {RegexEnum.AcenteNo,@"" },
+        {RegexEnum.ZeyilNo,@"" }
+    };
+
+    Dictionary<RegexEnum, string> trafficRegex = new Dictionary<RegexEnum, string>() {
         {RegexEnum.NationalNumber,@"" },
         {RegexEnum.PolicyNo,@"" },
         //{RegexEnum.RenewNo,@"" },
@@ -37,7 +67,6 @@ try
         {RegexEnum.Name,@"" },
         {RegexEnum.Firm,@"" },
         {RegexEnum.Brand,@"" },
-        {RegexEnum.Address, @"--"},
         {RegexEnum.VehicleModel,@"" },
         {RegexEnum.ModelYear,@"" },
         {RegexEnum.UsingType, @""},
@@ -53,6 +82,208 @@ try
         {RegexEnum.VknNo,@"" },
         {RegexEnum.IsPolicy,  @"" },
         {RegexEnum.IsOffer, @"" },
+        {RegexEnum.QueryType, @"" },
+        {RegexEnum.AcenteNo,@"" },
+        {RegexEnum.ZeyilNo,@"" }
+    };
+
+    Dictionary<RegexEnum, string> zeyilRegex = new Dictionary<RegexEnum, string>() {
+        {RegexEnum.NationalNumber,@"" },
+        {RegexEnum.PolicyNo,@"" },
+        //{RegexEnum.RenewNo,@"" },
+        {RegexEnum.StartDate,@"(?<=Başlama Tarihi: )(.*)(?= Bi)" },
+        {RegexEnum.EndDate, @"(?<=Bitiş Tarihi ve Saati Süresi Vadesi\n340148 0468997559 1 31/01/2023-15:05 - )(.*)(?= 31)"},
+        {RegexEnum.Name,@"" },
+        {RegexEnum.Firm,@"" },
+        {RegexEnum.Address,@"" },
+        {RegexEnum.Policypremium,@"" },
+        {RegexEnum.Brand,@"(?<= Marka :)(.*)(?=)" },
+        {RegexEnum.VehicleModel,@"(?<= Model : )(.*)(?=)" },
+        {RegexEnum.ModelYear,@" Model Yılı : " },
+        {RegexEnum.UsingType, @""},
+        {RegexEnum.VehicleType,@"" },
+        {RegexEnum.BrandCode,@" "},
+        {RegexEnum.FrameNumber,@"(?<=Şasi No : )(.*)(?= M)" },
+        {RegexEnum.EngineNo,@"" },
+        {RegexEnum.NetPremium,@"(?<=Vergi Öncesi Prim )(.*)(?=)" },
+        {RegexEnum.GrossPremium,@"(?<=Ödenecek Tutar )(.*)(?=)" },
+        {RegexEnum.RegisterNo,@"" },
+        {RegexEnum.PlateNumber,"\r\n(?<=Plaka No : )(.*)(?= Mar)" },
+        {RegexEnum.Branch,@"" },
+        {RegexEnum.VknNo,@"" },
+        {RegexEnum.IsPolicy,  @"" },
+        {RegexEnum.IsOffer, @"(?<=Süresi Vadesi\n340148 )(.*)(?= 1 )" },
+        {RegexEnum.QueryType, @"" },
+        {RegexEnum.AcenteNo,@"" },
+        {RegexEnum.ZeyilNo,@"" }
+    };
+    /*
+      void aveonekokasko.PDF()
+    {  
+    
+try
+{
+    bool IsPolicy = false;
+    bool IsOffer = false;
+    bool IsZeyil = false;
+
+    List<PdfModel> response = new List<PdfModel>();
+    List<RegexModel> patternList = new List<RegexModel>();
+    Dictionary<string, string> extractResponse = new Dictionary<string, string>();
+
+    var queryType = QueryTypeEnum.None;
+    var branch = QueryTypeEnum.None;
+
+    string[] offerPatterns = { "(KASKO SİGORTA)(.*)" };
+    string[] zeyilPatterns = { "" };
+
+    var read = PdfExtractText("pdf/aveonekokasko.PDF"); // pdfin konumu
+
+    var text = read[0].ToString();
+    //isim ,soyisim ,adres, fiyat, police,tc (text bak  alt satıra point koy)
+    //(?<=\d{10}/\d{1} \d{2}/\d{2}/\d{4} - )(.*)(?= \d{10} /\d{1}\d{8} \d{9})bitiş tarihi
+    //PolicyEnforcement not başlangıç bitiş
+    Dictionary<RegexEnum, string> cascoRegex = new Dictionary<RegexEnum, string>() {
+        {RegexEnum.NationalNumber,@"(?<=T.C. Kimlik No:)(.*)(?=)" },
+        {RegexEnum.PolicyNo,@"" },
+        //{RegexEnum.RenewNo,@"" },
+        {RegexEnum.StartDate,@"(?<=Başlama Tarihi: )(.*)(?= Bi)" },
+        {RegexEnum.EndDate, @"(?<= Bitiş Tarihi: )(.*)(?=)"},
+        {RegexEnum.Name,@"(?<=SİGORTA ETTİREN\n)(.*)(?=)" },
+        {RegexEnum.Firm,@"" },
+        {RegexEnum.Brand,@"(?<=Marka          :)(.*)(?= Tip)" },
+        {RegexEnum.Address, @""},
+        {RegexEnum.VehicleModel,@"(?<= Tip)(.*)(?=)" },
+        {RegexEnum.ModelYear,@"(?<=Model Yılı     :)(.*)(?=)" },
+        {RegexEnum.UsingType, @""},
+        {RegexEnum.VehicleType,@"" },
+        {RegexEnum.BrandCode,@" "},
+        {RegexEnum.FrameNumber,@"(?<= Şasi No     )(.*)(?=)" },
+        {RegexEnum.EngineNo,@"" },
+        {RegexEnum.NetPremium,@"(?<=Net Prim )(.*)(?= P)" },
+        {RegexEnum.GrossPremium,@"(?<=Brüt Prim )(.*)(?= 2)" },
+        {RegexEnum.RegisterNo,@"" },
+        {RegexEnum.PlateNumber," (?<=Plaka       :)(.*)(?=)" },
+        {RegexEnum.Branch,@"" },
+        {RegexEnum.VknNo,@"" },
+        {RegexEnum.IsPolicy,  @"" },
+        {RegexEnum.IsOffer, @"" },
+        {RegexEnum.QueryType, @"" },
+        {RegexEnum.AcenteNo,@"" },
+        {RegexEnum.ZeyilNo,@"" }
+    };
+
+    Dictionary<RegexEnum, string> trafficRegex = new Dictionary<RegexEnum, string>() {
+        {RegexEnum.NationalNumber,@"" },
+        {RegexEnum.PolicyNo,@"" },
+        //{RegexEnum.RenewNo,@"" },
+        {RegexEnum.StartDate,@"" },
+        {RegexEnum.EndDate, @""},
+        {RegexEnum.Name,@"" },
+        {RegexEnum.Firm,@"" },
+        {RegexEnum.Brand,@"" },
+        {RegexEnum.VehicleModel,@"" },
+        {RegexEnum.ModelYear,@"" },
+        {RegexEnum.UsingType, @""},
+        {RegexEnum.VehicleType,@"" },
+        {RegexEnum.BrandCode,@" "},
+        {RegexEnum.FrameNumber,@"" },
+        {RegexEnum.EngineNo,@"" },
+        {RegexEnum.NetPremium,@"" },
+        {RegexEnum.GrossPremium,@"" },
+        {RegexEnum.RegisterNo,@"" },
+        {RegexEnum.PlateNumber,"" },
+        {RegexEnum.Branch,@"" },
+        {RegexEnum.VknNo,@"" },
+        {RegexEnum.IsPolicy,  @"" },
+        {RegexEnum.IsOffer, @"" },
+        {RegexEnum.QueryType, @"" },
+        {RegexEnum.AcenteNo,@"" },
+        {RegexEnum.ZeyilNo,@"" }
+    };
+
+    Dictionary<RegexEnum, string> zeyilRegex = new Dictionary<RegexEnum, string>() {
+        {RegexEnum.NationalNumber,@"" },
+        {RegexEnum.PolicyNo,@"" },
+        //{RegexEnum.RenewNo,@"" },
+        {RegexEnum.StartDate,@"(?<=Başlama Tarihi: )(.*)(?= Bi)" },
+        {RegexEnum.EndDate, @"(?<=Bitiş Tarihi ve Saati Süresi Vadesi\n340148 0468997559 1 31/01/2023-15:05 - )(.*)(?= 31)"},
+        {RegexEnum.Name,@"" },
+        {RegexEnum.Firm,@"" },
+        {RegexEnum.Address,@"" },
+        {RegexEnum.Policypremium,@"" },
+        {RegexEnum.Brand,@"(?<= Marka :)(.*)(?=)" },
+        {RegexEnum.VehicleModel,@"(?<= Model : )(.*)(?=)" },
+        {RegexEnum.ModelYear,@" Model Yılı : " },
+        {RegexEnum.UsingType, @""},
+        {RegexEnum.VehicleType,@"" },
+        {RegexEnum.BrandCode,@" "},
+        {RegexEnum.FrameNumber,@"(?<=Şasi No : )(.*)(?= M)" },
+        {RegexEnum.EngineNo,@"" },
+        {RegexEnum.NetPremium,@"(?<=Vergi Öncesi Prim )(.*)(?=)" },
+        {RegexEnum.GrossPremium,@"(?<=Ödenecek Tutar )(.*)(?=)" },
+        {RegexEnum.RegisterNo,@"" },
+        {RegexEnum.PlateNumber,"\r\n(?<=Plaka No : )(.*)(?= Mar)" },
+        {RegexEnum.Branch,@"" },
+        {RegexEnum.VknNo,@"" },
+        {RegexEnum.IsPolicy,  @"" },
+        {RegexEnum.IsOffer, @"(?<=Süresi Vadesi\n340148 )(.*)(?= 1 )" },
+        {RegexEnum.QueryType, @"" },
+        {RegexEnum.AcenteNo,@"" },
+        {RegexEnum.ZeyilNo,@"" }
+    };
+    }
+      void 
+      {
+
+
+try
+{
+    bool IsPolicy = false;
+    bool IsOffer = false;
+    bool IsZeyil = false;
+
+    List<PdfModel> response = new List<PdfModel>();
+    List<RegexModel> patternList = new List<RegexModel>();
+    Dictionary<string, string> extractResponse = new Dictionary<string, string>();
+
+    var queryType = QueryTypeEnum.None;
+    var branch = QueryTypeEnum.None;
+
+    string[] offerPatterns = { "(KASKO SİGORTA)(.*)" };
+    string[] zeyilPatterns = { "" };
+
+    var read = PdfExtractText("pdf/atlastkpteklif.pdf"); // pdfin konumu
+
+    var text = read[0].ToString();
+    //isim ,soyisim ,adres, fiyat, police,tc (text bak  alt satıra point koy)
+    //(?<=\d{10}/\d{1} \d{2}/\d{2}/\d{4} - )(.*)(?= \d{10} /\d{1}\d{8} \d{9})bitiş tarihi
+    //PolicyEnforcement not başlangıç bitiş
+    Dictionary<RegexEnum, string> cascoRegex = new Dictionary<RegexEnum, string>() {
+        {RegexEnum.NationalNumber,@"(?<=VERGİ DR. NO : )(.*)(?=)" },
+        {RegexEnum.PolicyNo,@"" },
+        //{RegexEnum.RenewNo,@"" },
+        {RegexEnum.StartDate,@"" },
+        {RegexEnum.EndDate, @""},
+        {RegexEnum.Name,@"" },
+        {RegexEnum.Firm,@"(?<=ÜNVANI : )(.*)(?=)" },
+        {RegexEnum.Brand,@"(?<=MARKA : )(.*)(?=) " },
+        {RegexEnum.Address, @"(?<=ADRES : )(.*)(?=)"},
+        {RegexEnum.VehicleModel,@"(?<=MODEL : )(.*)(?=)" },
+        {RegexEnum.ModelYear,@"(?<=MODEL YILI : )(.*)(?=)" },
+        {RegexEnum.UsingType, @""},
+        {RegexEnum.VehicleType,@"" },
+        {RegexEnum.BrandCode,@" "},
+        {RegexEnum.FrameNumber,@"(?<=ŞASİ NO : )(.*)(?=)" },
+        {RegexEnum.EngineNo,@"" },
+        {RegexEnum.NetPremium,@"(?<=TOPLAM NET PRİM : )(.*)(?=)" },
+        {RegexEnum.GrossPremium,@"(?<=BRÜT PRİM : )(.*)(?=)" },
+        {RegexEnum.RegisterNo,@"" },
+        {RegexEnum.PlateNumber,"PLAKA : " },
+        {RegexEnum.Branch,@"" },
+        {RegexEnum.VknNo,@"" },
+        {RegexEnum.IsPolicy,  @"" },
+        {RegexEnum.IsOffer, @"(?<=TEKLİF NO : )(.*)(?= 0 Ü)" },
         {RegexEnum.QueryType, @"" },
         {RegexEnum.AcenteNo,@"" },
         {RegexEnum.ZeyilNo,@"" }
@@ -117,7 +348,8 @@ try
         {RegexEnum.AcenteNo,@"" },
         {RegexEnum.ZeyilNo,@"" }
     };
-    /*
+
+     }
      void andolukaskoteklif()
     {
 
@@ -832,7 +1064,7 @@ try
     foreach (var zeyil in zeyilPatterns)
     {
         Match match = Regex.Match(text, zeyil);
-        if (match.Success)
+        if (match.Success && !string.IsNullOrEmpty(match.Value))
         {
             queryType = QueryTypeEnum.ZEYIL;
             IsZeyil = true;
