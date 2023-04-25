@@ -8,6 +8,13 @@ using System.Security.Authentication.ExtendedProtection;
 
 try
 {
+    //tc veya vergi no, ad soyad , fiyatlar, başlangıç ve bitiş tarihi
+
+    //teklif yada police belir 
+
+    //isim ,soyisim ,adres, fiyat, police,tc (text bak  alt satıra point koy)
+    //(?<=\d{10}/\d{1} \d{2}/\d{2}/\d{4} - )(.*)(?= \d{10} /\d{1}\d{8} \d{9})bitiş tarihi
+    //PolicyEnforcement not başlangıç bitiş
     bool IsPolicy = false;
     bool IsOffer = false;
     bool IsZeyil = false;
@@ -18,20 +25,14 @@ try
 
     var queryType = QueryTypeEnum.None;
     var branch = QueryTypeEnum.None;
-   string[] offerPatterns = { "(KASKO SİGORTA)(.*)" };
-   // string[] offerPatterns = { "" };
-    string[] zeyilPatterns = { "(ZEYİLNAMESİ)(.*)" };
+   string[] offerPatterns = { "" };
+    // string[] offerPatterns = { "" };(ZEYİLNAMESİ)(.*)(KASKO SİGORTA)(.*)
+    string[] zeyilPatterns = { "(ZEYİLNAME)(.*)(?=)" };
 
-    var read = PdfExtractText("pdf/raydaskpolice.pdf"); // pdfin konumu
+    var read = PdfExtractText("pdf/aveondaskprimsizzeyil.pdf"); // pdfin konumu
 
     var text = read[0].ToString();
-    //tc veya vergi no, ad soyad , fiyatlar, başlangıç ve bitiş tarihi
-
-    //teklif yada police belir 
-
-    //isim ,soyisim ,adres, fiyat, police,tc (text bak  alt satıra point koy)
-    //(?<=\d{10}/\d{1} \d{2}/\d{2}/\d{4} - )(.*)(?= \d{10} /\d{1}\d{8} \d{9})bitiş tarihi
-    //PolicyEnforcement not başlangıç bitiş
+   
     Dictionary<RegexEnum, string> cascoRegex = new Dictionary<RegexEnum, string>() {
         {RegexEnum.NationalNumber,@"" },
         {RegexEnum.PolicyNo,@"" },
@@ -93,16 +94,16 @@ try
     };
 
     Dictionary<RegexEnum, string> zeyilRegex = new Dictionary<RegexEnum, string>() {
-     {RegexEnum.NationalNumber,@"(?<=T.C. KİMLİK NO : )(.*)(?=)" },
-        {RegexEnum.PolicyNo,@"(?<=TEL/FAKS\n: )(.*)(?= :)" },
+     {RegexEnum.NationalNumber,@"(?<=Kimlik No : )(.*)(?=)" },
+        {RegexEnum.PolicyNo,@"(?<=Dask Poliçe No : )(.*)(?= Y)" },
         //{RegexEnum.RenewNo,@"" },
-        {RegexEnum.StartDate,@"(?<=BAŞLANGIÇ TARİHİ\n)(.*)(?=)" },
-        {RegexEnum.EndDate, @"(?<= BİTİŞ TARİHİ\n)(.*)(?=)"},
-        {RegexEnum.Name,@"(?<=ADI SOYADI : )(.*)(?=)" },
+        {RegexEnum.StartDate,@"(?<=Poliçe Vadesi : )(.*)(?=-2)" },
+        {RegexEnum.EndDate, @"(?<=Poliçe Vadesi : \d{2}.\d{2}.\d{4}-)(.*)(?=)"},
+        {RegexEnum.Name,@"(?<=Adı Soyadı : )(.*)(?=)" },
         {RegexEnum.Firm,@"" },
         {RegexEnum.Brand,@"" },
-        {RegexEnum.Policypremium,@"(?<=PRİM : )(.*)(?=)" },
-        {RegexEnum.Address, @""},
+        {RegexEnum.Policypremium,@"(?<=Prim )(.*)(?=\d)" },
+        {RegexEnum.Address, @"(?<=İletişim Adresi: )(.*)(?=)"},
         {RegexEnum.VehicleModel,@"" },
         {RegexEnum.ModelYear,@"" },
         {RegexEnum.UsingType, @""},
