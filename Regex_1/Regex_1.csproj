@@ -13,7 +13,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="pdf\akdaskprimlizeyil.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pdf\akdaskprimsizzeyil.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="pdf\ALLİANZDASKPRİMSİZZEYİL.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pdf\allianzdaskpolice.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pdf\allianzdaskprimlizeyil.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pdf\allianzdaskprimsizzeyil.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="pdf\anadoludask.pdf">

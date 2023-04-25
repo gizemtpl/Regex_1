@@ -25,25 +25,25 @@ try
 
     var queryType = QueryTypeEnum.None;
     var branch = QueryTypeEnum.None;
-   string[] offerPatterns = { "" };
+   string[] offerPatterns = { "(DASK)(.*)" };
     // string[] offerPatterns = { "" };(ZEYİLNAMESİ)(.*)(KASKO SİGORTA)(.*)
-    string[] zeyilPatterns = { "(ZEYİLNAME)(.*)(?=)" };
+    string[] zeyilPatterns = { "" };
 
-    var read = PdfExtractText("pdf/aveondaskprimsizzeyil.pdf"); // pdfin konumu
+    var read = PdfExtractText("pdf/akdaskprimsizzeyil.pdf"); // pdfin konumu
 
     var text = read[0].ToString();
    
     Dictionary<RegexEnum, string> cascoRegex = new Dictionary<RegexEnum, string>() {
-        {RegexEnum.NationalNumber,@"" },
-        {RegexEnum.PolicyNo,@"" },
+     {RegexEnum.NationalNumber,@"(?<=TC KİMLİK NO : )(.*)(?=)" },
+        {RegexEnum.PolicyNo,@"(?<=POLİÇE NO : )(.*)(?= İN)" },
         //{RegexEnum.RenewNo,@"" },
-        {RegexEnum.StartDate,@"" },
-        {RegexEnum.EndDate, @""},
-        {RegexEnum.Name,@"" },
+        {RegexEnum.StartDate,@"(?<=BAŞLANGIÇ TARİHİ : )(.*)(?=)" },
+        {RegexEnum.EndDate, @"(?<=BİTİŞ TARİHİ : )(.*)(?=)"},
+        {RegexEnum.Name,@"(?<=ADI SOYADI : )(.*)(?=)" },
         {RegexEnum.Firm,@"" },
         {RegexEnum.Brand,@"" },
-        {RegexEnum.Policypremium,@"" },
-        {RegexEnum.Address, @""},
+        {RegexEnum.Policypremium,@"(?<=MESKEN PRİM : )(.*)(?=)" },
+        {RegexEnum.Address, @"(?<=ADRES : )(.*)(?=)"},
         {RegexEnum.VehicleModel,@"" },
         {RegexEnum.ModelYear,@"" },
         {RegexEnum.UsingType, @""},
@@ -94,16 +94,16 @@ try
     };
 
     Dictionary<RegexEnum, string> zeyilRegex = new Dictionary<RegexEnum, string>() {
-     {RegexEnum.NationalNumber,@"(?<=Kimlik No : )(.*)(?=)" },
-        {RegexEnum.PolicyNo,@"(?<=Dask Poliçe No : )(.*)(?= Y)" },
+       {RegexEnum.NationalNumber,@"" },
+        {RegexEnum.PolicyNo,@"" },
         //{RegexEnum.RenewNo,@"" },
-        {RegexEnum.StartDate,@"(?<=Poliçe Vadesi : )(.*)(?=-2)" },
-        {RegexEnum.EndDate, @"(?<=Poliçe Vadesi : \d{2}.\d{2}.\d{4}-)(.*)(?=)"},
-        {RegexEnum.Name,@"(?<=Adı Soyadı : )(.*)(?=)" },
+        {RegexEnum.StartDate,@"" },
+        {RegexEnum.EndDate, @""},
+        {RegexEnum.Name,@"" },
         {RegexEnum.Firm,@"" },
         {RegexEnum.Brand,@"" },
-        {RegexEnum.Policypremium,@"(?<=Prim )(.*)(?=\d)" },
-        {RegexEnum.Address, @"(?<=İletişim Adresi: )(.*)(?=)"},
+        {RegexEnum.Policypremium,@"" },
+        {RegexEnum.Address, @""},
         {RegexEnum.VehicleModel,@"" },
         {RegexEnum.ModelYear,@"" },
         {RegexEnum.UsingType, @""},
